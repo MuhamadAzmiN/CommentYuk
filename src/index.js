@@ -4,7 +4,6 @@ import { connectDB } from "./lib/db.js";
 import { web } from "./app/web.js";
 
 dotenv.config();
-
 const PORT = process.env.PORT || 3000;
 
 web.listen(PORT, async () => {

@@ -40,11 +40,6 @@ export const register = async (req, res) => {
             }
         })
 
-
-    
-        
-
-
         if(newUser) {
            generateToken(newUser.id, res)
            res.status(201).json({
@@ -62,36 +57,38 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    const {email, password } = req.body        
+    const { email, password } = req.body
+    
     try {
         const user = await prismaClient.user.findFirst({
-            where : {
-                email : email
+            where: {
+                email: email
             },
-           
-        })
+        });
         
-        if(!user){
-            res.status(400).json({message: "Invalid Credientials"})
+        if (!user) {
+            return res.status(400).json({ message: "Invalid Credentials" });
         }
-
-        const isPasswordCorrect = await bcrypt.compare(password, user.password)
-        if(!isPasswordCorrect) {
-            res.status(400).json({message: "Invalid Credientials"})
+        
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ message: "Invalid Credentials" });
         }
-
-        generateToken(user.id, res)
+        
+        generateToken(user.id, res);
+        
+        // Kirim semua data yang dibutuhkan frontend
         res.status(200).json({
-            username : user.username,
-            email : user.email
-        })
-    }catch(e) {
-        console.log('Error: ', e.message);
-        res.status(500).json({ message : "INTERNAL SERVER ERROR"})
-        
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            // tambahkan field lain yang dibutuhkan
+        });
+    } catch (error) {
+        console.log('Error in login: ', error);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
-
 export const logout = async (req, res) => {
     try {
         res.cookie("jwt", "", {maxAge : 0})
@@ -102,6 +99,16 @@ export const logout = async (req, res) => {
     }
 }
 
+
+export const checkAuth = async (req, res) => {
+    try {
+        res.status(200).json(req.user)
+    }catch(error) {
+        console.log("Error In checkAuth Controller", error.message);
+        res.status(500).json({ message : "Internal Server Error" })
+        
+    }
+}
 
 
 

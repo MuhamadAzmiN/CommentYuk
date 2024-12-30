@@ -5,7 +5,7 @@ export const create = async (req, res ) => {
     try {
 
 
-        if(!title || !content || !description || !category) {
+        if(!title || !content || !description) {
             return res.status(400).json({message: "All fields are required"})
         }
 
