@@ -2,10 +2,10 @@ import { prismaClient } from "../app/database.js"
 import bcrypt from "bcryptjs"
 import { generateToken } from "../lib/utils.js"
 export const register = async (req, res) => {
-    const { username , email, password, rayon } = req.body
+    const { username , email, password, profesi } = req.body
     try {
 
-        if(!username || !email || !password || !rayon){
+        if(!username || !email || !password || !profesi){
             return res.status(400).json({message: "All fields are required"})
         }
 
@@ -36,7 +36,8 @@ export const register = async (req, res) => {
                 username,
                 email,
                 password : hashedPassword,
-                rayon
+                profesi,
+                image : ''
             }
         })
 

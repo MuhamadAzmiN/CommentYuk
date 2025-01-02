@@ -42,7 +42,7 @@ export const getCategory = async (req,res) => {
                 id : true
             }
         })
-
+        
 
 
         if(result.length == 0) {

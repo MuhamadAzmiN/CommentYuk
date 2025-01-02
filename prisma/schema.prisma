@@ -17,10 +17,12 @@ model User {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
   email    String  @unique
   username String
-  rayon    String
+  profesi  String
+  image    String?
   password String
   posts    Post[]  // Relasi ke model Post
 }
+
 
 model Post {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -29,21 +31,22 @@ model Post {
   description String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
   authorId    String   @db.ObjectId
   author      User     @relation(fields: [authorId], references: [id]) // Relasi ke model User
 
   categoryId  String   @db.ObjectId
-  category    Category @relation(fields: [categoryId], references: [id]) // Relasi ke model Category
+  category    Category @relation("CategoryToPosts", fields: [categoryId], references: [id]) // Relasi ke model Category
 
   @@map("posts") // Nama koleksi di MongoDB
 }
+
+
 
 model Category {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String   @unique               // Nama kategori
   slug        String   @unique               // URL-friendly name (slug)
-  posts       Post[]   @relation("CategoryToPosts") // Relasi dengan tabel Post
+  posts Post[] @relation("CategoryToPosts")
   createdAt   DateTime @default(now())       // Waktu pembuatan
   updatedAt   DateTime @updatedAt            // Waktu terakhir diperbarui
 
